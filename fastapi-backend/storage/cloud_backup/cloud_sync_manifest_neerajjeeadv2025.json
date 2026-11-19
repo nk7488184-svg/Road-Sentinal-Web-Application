@@ -1,0 +1,464 @@
+{
+  "account": "neerajjeeadv2025@gmail.com",
+  "project": "RoadSentinel Campus Traffic Analytics & Enforcement",
+  "storage_policy": "Permanent Cloud Ledger + Volatile Edge Streaming",
+  "last_synced_utc": "2026-11-18T11:41:05.177133+00:00",
+  "total_records_backed_up": 137,
+  "total_images_staged": 137,
+  "sync_destinations": [
+    "Google Drive: RoadSentinel_Evidence_neerajjeeadv2025@gmail.com",
+    "Google Cloud Storage: gs://roadsentinel-traffic-data-neerajjeeadv2025"
+  ],
+  "recent_backups": [
+    {
+      "breach_id": "BREACH-94DE2672",
+      "timestamp": "2026-11-18 17:11:04 IST",
+      "speed": 38.9,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_114104_BREACH-94DE2672_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-3422E4A2",
+      "timestamp": "2026-11-18 17:11:01 IST",
+      "speed": 40.4,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_114101_BREACH-3422E4A2_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-B7654B5B",
+      "timestamp": "2026-11-18 17:10:58 IST",
+      "speed": 35.7,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_114058_BREACH-B7654B5B_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-6380C769",
+      "timestamp": "2026-11-18 17:09:08 IST",
+      "speed": 28.5,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113908_BREACH-6380C769_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-35294169",
+      "timestamp": "2026-11-18 17:09:05 IST",
+      "speed": 36.9,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113905_BREACH-35294169_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-ECC28737",
+      "timestamp": "2026-11-18 17:09:01 IST",
+      "speed": 35.2,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113901_BREACH-ECC28737_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-C675BA6A",
+      "timestamp": "2026-11-18 17:08:58 IST",
+      "speed": 43.3,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113858_BREACH-C675BA6A_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-B6B4C274",
+      "timestamp": "2026-11-18 17:08:55 IST",
+      "speed": 36.9,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113855_BREACH-B6B4C274_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-051479CD",
+      "timestamp": "2026-11-18 17:07:54 IST",
+      "speed": 20.0,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Bus",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113754_BREACH-051479CD_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-A300CFA2",
+      "timestamp": "2026-11-18 17:07:46 IST",
+      "speed": 26.9,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Bus",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113746_BREACH-A300CFA2_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-D6D67300",
+      "timestamp": "2026-11-18 17:03:54 IST",
+      "speed": 20.6,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113354_BREACH-D6D67300_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-6F8CB3DC",
+      "timestamp": "2026-11-18 17:03:51 IST",
+      "speed": 20.1,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113351_BREACH-6F8CB3DC_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-94630B55",
+      "timestamp": "2026-11-18 17:02:44 IST",
+      "speed": 29.2,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113244_BREACH-94630B55_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-B6454998",
+      "timestamp": "2026-11-18 17:02:41 IST",
+      "speed": 40.0,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113241_BREACH-B6454998_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-41E62019",
+      "timestamp": "2026-11-18 17:02:38 IST",
+      "speed": 31.1,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113238_BREACH-41E62019_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-CB7A8CF2",
+      "timestamp": "2026-11-18 17:02:35 IST",
+      "speed": 22.4,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113235_BREACH-CB7A8CF2_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-4BB81158",
+      "timestamp": "2026-11-18 17:02:00 IST",
+      "speed": 34.4,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113200_BREACH-4BB81158_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-E524D0D7",
+      "timestamp": "2026-11-18 17:01:57 IST",
+      "speed": 33.8,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113157_BREACH-E524D0D7_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-89D01510",
+      "timestamp": "2026-11-18 17:01:54 IST",
+      "speed": 25.1,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113154_BREACH-89D01510_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-4659F2E1",
+      "timestamp": "2026-11-18 17:01:09 IST",
+      "speed": 47.9,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113109_BREACH-4659F2E1_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-049A3883",
+      "timestamp": "2026-11-18 17:01:06 IST",
+      "speed": 47.0,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113106_BREACH-049A3883_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-A8C40E95",
+      "timestamp": "2026-11-18 17:00:21 IST",
+      "speed": 25.0,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Bus",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113021_BREACH-A8C40E95_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-C429594A",
+      "timestamp": "2026-11-18 17:00:18 IST",
+      "speed": 28.2,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113018_BREACH-C429594A_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-24252803",
+      "timestamp": "2026-11-18 17:00:15 IST",
+      "speed": 29.3,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113015_BREACH-24252803_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-6587C863",
+      "timestamp": "2026-11-18 17:00:11 IST",
+      "speed": 29.1,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113011_BREACH-6587C863_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-BAB89213",
+      "timestamp": "2026-11-18 17:00:08 IST",
+      "speed": 23.3,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_113008_BREACH-BAB89213_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-DEE51112",
+      "timestamp": "2026-11-18 16:58:52 IST",
+      "speed": 21.1,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112852_BREACH-DEE51112_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-596E73E0",
+      "timestamp": "2026-11-18 16:58:49 IST",
+      "speed": 29.3,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112849_BREACH-596E73E0_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-7C1A56B5",
+      "timestamp": "2026-11-18 16:58:46 IST",
+      "speed": 31.7,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112846_BREACH-7C1A56B5_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-EBD4DD7D",
+      "timestamp": "2026-11-18 16:58:43 IST",
+      "speed": 24.8,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112843_BREACH-EBD4DD7D_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-2054391E",
+      "timestamp": "2026-11-18 16:57:23 IST",
+      "speed": 23.8,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Motorcycle",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112723_BREACH-2054391E_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-4F5C8D33",
+      "timestamp": "2026-11-18 16:57:20 IST",
+      "speed": 34.0,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112720_BREACH-4F5C8D33_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-4C898304",
+      "timestamp": "2026-11-18 16:57:17 IST",
+      "speed": 36.3,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112717_BREACH-4C898304_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-F9B1F6B1",
+      "timestamp": "2026-11-18 16:57:14 IST",
+      "speed": 28.2,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112714_BREACH-F9B1F6B1_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-89B67776",
+      "timestamp": "2026-11-18 16:56:12 IST",
+      "speed": 23.7,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112612_BREACH-89B67776_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-533A93CC",
+      "timestamp": "2026-11-18 16:56:09 IST",
+      "speed": 31.3,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112609_BREACH-533A93CC_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-203CD44F",
+      "timestamp": "2026-11-18 16:56:06 IST",
+      "speed": 31.0,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112606_BREACH-203CD44F_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-5F9366B1",
+      "timestamp": "2026-11-18 16:56:03 IST",
+      "speed": 28.7,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112603_BREACH-5F9366B1_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-9D5C86BE",
+      "timestamp": "2026-11-18 16:54:50 IST",
+      "speed": 41.9,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112450_BREACH-9D5C86BE_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-4FAA6C8E",
+      "timestamp": "2026-11-18 16:54:46 IST",
+      "speed": 41.2,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112446_BREACH-4FAA6C8E_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-BD4BCC54",
+      "timestamp": "2026-11-18 16:54:34 IST",
+      "speed": 20.3,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Motorcycle",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112434_BREACH-BD4BCC54_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-2DF30BAA",
+      "timestamp": "2026-11-18 16:54:31 IST",
+      "speed": 33.2,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112431_BREACH-2DF30BAA_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-1ACB5575",
+      "timestamp": "2026-11-18 16:54:28 IST",
+      "speed": 36.2,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112428_BREACH-1ACB5575_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-0B6C6D09",
+      "timestamp": "2026-11-18 16:54:25 IST",
+      "speed": 33.1,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112425_BREACH-0B6C6D09_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-C6A45241",
+      "timestamp": "2026-11-18 16:50:49 IST",
+      "speed": 26.7,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112049_BREACH-C6A45241_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-FB226581",
+      "timestamp": "2026-11-18 16:50:46 IST",
+      "speed": 34.7,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112046_BREACH-FB226581_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-93785FA2",
+      "timestamp": "2026-11-18 16:50:43 IST",
+      "speed": 31.6,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112043_BREACH-93785FA2_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-0CFEB9B1",
+      "timestamp": "2026-11-18 16:50:40 IST",
+      "speed": 28.8,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_112040_BREACH-0CFEB9B1_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-78D39788",
+      "timestamp": "2026-11-18 16:49:30 IST",
+      "speed": 22.0,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_111930_BREACH-78D39788_PLATE_UNREADABLE.jpg"
+    },
+    {
+      "breach_id": "BREACH-F3B5C36C",
+      "timestamp": "2026-11-18 16:49:27 IST",
+      "speed": 27.6,
+      "plate": "PLATE_UNREADABLE",
+      "vehicle": "Car",
+      "cloud_target": "neerajjeeadv2025@gmail.com",
+      "staged_file": "20261118_111927_BREACH-F3B5C36C_PLATE_UNREADABLE.jpg"
+    }
+  ]
+}
