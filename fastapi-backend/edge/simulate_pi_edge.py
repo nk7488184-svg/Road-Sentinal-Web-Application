@@ -1,5 +1,5 @@
 """
-Raspberry Pi 4 Edge Sensor Simulator (HLK-LD2415H 24GHz Doppler Radar + Camera Module 3)
+Raspberry Pi 5 Edge Sensor Simulator (HLK-LD2415H 24GHz Doppler Radar + Camera Module 3)
 Streams live zero-AI radar state machine telemetry and speed breach alerts to FastAPI.
 """
 

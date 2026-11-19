@@ -1,6 +1,6 @@
 /**
  * Edge-Assisted Traffic Enforcement & Analytics - Edge Sensing Daemon
- * Target Hardware: Raspberry Pi 4 (2GB RAM)
+ * Target Hardware: Raspberry Pi 5 (1GB RAM)
  * Sensor: HLK-LD2415H 24GHz Doppler Radar (UART @ 9600 baud, /dev/ttyUSB0)
  * Camera: Raspberry Pi Camera Module 3 (CSI-2 / libcamera)
  * 

@@ -3,7 +3,7 @@
 ================================================================================
 RoadSentinel - Ultra-Low-Latency Edge Streamer & Road Analytics Engine
 ================================================================================
-Target Hardware : Raspberry Pi 4 / 3B+ / 5 (1GB RAM Optimized)
+Target Hardware : Raspberry Pi 5 (1GB RAM Optimized)
 Sensors         : Sony IMX708 NoIR (Camera Module 3) + 24GHz Doppler Radar
 Storage Policy  : STRICT ZERO SD-CARD STORAGE (100% Volatile RAM / 0 Bytes on SD)
 Cloud Target    : Google Drive & Google Cloud (neerajjeeadv2025@gmail.com)

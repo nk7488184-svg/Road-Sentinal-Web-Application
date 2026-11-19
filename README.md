@@ -2,7 +2,7 @@
 
 A comprehensive, full-stack GIS-integrated road hazard reporting and **Edge-Assisted Doppler Radar Traffic Analytics & Enforcement ecosystem** built for **IIT Mandi Campus**. 
 
-The system pairs ultra-low-footprint edge sensing on roadside **Raspberry Pi 4 (2GB)** nodes (running a zero-AI C++ State Machine on 24GHz Doppler radar + Camera Module 3) with a high-throughput **FastAPI** analytics engine and real-time **Next.js** monitoring dashboards.
+The system pairs ultra-low-footprint edge sensing on roadside **Raspberry Pi 5 (1GB)** nodes (running a zero-AI C++ State Machine on 24GHz Doppler radar + Camera Module 3) with a high-throughput **FastAPI** analytics engine and real-time **Next.js** monitoring dashboards.
 
 ---
 
@@ -32,8 +32,8 @@ DP-PROJECT/
 │   │   ├── models.py           # Pydantic schemas for telemetry & breach payloads
 │   │   └── routes/telemetry.py # Ingestion endpoints (/summary, /breach, /stats)
 │   ├── edge/
-│   │   ├── edge_daemon.cpp     # C++17 Zero-AI Radar State Machine for Raspberry Pi 4
-│   │   └── simulate_pi_edge.py # Live Raspberry Pi 4 edge simulation script
+│   │   ├── edge_daemon.cpp     # C++17 Zero-AI Radar State Machine for Raspberry Pi 5
+│   │   └── simulate_pi_edge.py # Live Raspberry Pi 5 edge simulation script
 │   ├── storage/evidence/       # 1080p vehicle violation snapshots
 │   ├── main.py                 # ASGI entry point (port 8000)
 │   └── requirements.txt
@@ -67,7 +67,7 @@ DP-PROJECT/
 
 ## 📡 Edge-Assisted Traffic Enforcement & Analytics Architecture
 
-### 1. Ultra-Low Footprint Edge Sensing (Raspberry Pi 4 - 2GB RAM)
+### 1. Ultra-Low Footprint Edge Sensing (Raspberry Pi 5 - 1GB RAM)
 To eliminate heavy neural networks and memory fragmentation on roadside Pi nodes:
 - **Zero-AI C++ Radar State Machine (`edge_daemon.cpp`)**:
   ```
@@ -126,7 +126,7 @@ python simulate_pi_edge.py
 ```
 *Watch live radar state machine passes, flow rates, and speed breaches stream directly into the dashboard!*
 
-### 3. Compile C++ Daemon on Physical Raspberry Pi 4
+### 3. Compile C++ Daemon on Physical Raspberry Pi 5
 ```bash
 cd fastapi-backend/edge
 g++ -std=c++17 -O3 edge_daemon.cpp -o edge_daemon -lcurl -lpthread

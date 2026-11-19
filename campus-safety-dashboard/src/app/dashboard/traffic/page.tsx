@@ -525,7 +525,7 @@ export default function TrafficRadarPage() {
           <div className="flex items-center justify-between">
             <h3 className="font-bold text-foreground text-sm flex items-center gap-2">
               <Cpu className="w-4 h-4 text-emerald-400" />
-              <span>Raspberry Pi 4 Edge Sensing Pipeline (HLK-LD2415H Doppler)</span>
+              <span>Raspberry Pi 5 Edge Sensing Pipeline (HLK-LD2415H Doppler)</span>
             </h3>
             <span className="text-xs text-muted">RAM &lt; 35MB (Zero-AI C++)</span>
           </div>

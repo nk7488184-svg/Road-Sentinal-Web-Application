@@ -8,7 +8,7 @@ from datetime import datetime, timezone, timedelta
 
 class RawTelemetryPayload(BaseModel):
     """
-    Periodic raw telemetry summary sent by the Raspberry Pi 4 edge state machine
+    Periodic raw telemetry summary sent by the Raspberry Pi 5 edge state machine
     or the Python telemetry client every 1, 5, or 15 minutes.
     """
     device_id: Optional[str] = Field("RPI4_CAMERA_UNIT_01", description="Unique edge node identifier e.g. 'RPI4_CAMERA_UNIT_01'")

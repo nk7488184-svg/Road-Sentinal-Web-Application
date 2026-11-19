@@ -286,7 +286,7 @@ export default function PublicTrafficPage() {
           <div className="bg-emerald-50/50 border border-emerald-200/80 rounded-2xl p-6">
             <h3 className="font-bold text-emerald-950 text-sm mb-2">How Edge-Assisted Radar Analytics Works</h3>
             <p className="text-xs text-emerald-800 leading-relaxed">
-              Our campus roadside units run a lightweight C++ Zero-AI State Machine on Raspberry Pi 4 hardware,
+              Our campus roadside units run a lightweight C++ Zero-AI State Machine on Raspberry Pi 5 hardware (1GB RAM),
               reading 24GHz Doppler radar reflections at 9600 baud. As vehicles pass, speed vectors and timestamps are captured in RAM (&lt;35MB memory footprint)
               and streamed periodically to our FastAPI cloud server. The backend computes civil engineering speed percentiles (V85) and Greenshields congestion curves
               to keep IIT Mandi campus roads safe and congestion-free.

@@ -216,7 +216,7 @@ class TelemetryStore:
     def _seed_nov11_full_day(self):
         """
         Generates synthetic dataset for the November 11, 2026 Field Test (3:00 PM - 9:00 PM IST)
-        from a single Raspberry Pi 4 edge sensing unit (HLK-LD2415H 24 GHz
+        from a single Raspberry Pi 5 edge sensing unit (HLK-LD2415H 24 GHz
         Doppler radar) stationed Behind A11 on New Construction Road.
         """
         IST = timezone(timedelta(hours=5, minutes=30))

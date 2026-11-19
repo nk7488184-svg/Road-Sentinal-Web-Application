@@ -12,7 +12,7 @@ from app.database import db
 
 app = FastAPI(
     title="RoadSentinel Traffic Telemetry & Enforcement Engine",
-    description="Central FastAPI high-throughput ingestion & statistical analytics backend for Raspberry Pi 4 roadside sensing nodes + PyTorch Road Hazard Classification ML Engine.",
+    description="Central FastAPI high-throughput ingestion & statistical analytics backend for Raspberry Pi 5 roadside sensing nodes + PyTorch Road Hazard Classification ML Engine.",
     version="2.1.0",
 )
 
