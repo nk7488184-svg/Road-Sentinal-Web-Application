@@ -21,7 +21,7 @@ echo "=================================================================="
 
 # 1. Download latest edge client
 echo "[1/4] Fetching latest RoadSentinel Edge Client from GitHub..."
-curl -sSL https://raw.githubusercontent.com/nk7488184-svg/DP-PROJECT/main/rpi_camera_edge.py -o "$SCRIPT_PATH"
+curl -sSL https://raw.githubusercontent.com/nk7488184-svg/Road-Sentinal-Web-Application/main/rpi_camera_edge.py -o "$SCRIPT_PATH"
 chmod +x "$SCRIPT_PATH"
 
 # 2. Check and install python dependencies if needed
