@@ -27,6 +27,8 @@ DP-PROJECT/
 │   ├── app/
 │   │   ├── analytics.py        # 5-domain civil engineering & velocity formulas
 │   │   ├── ml_pipeline.py      # YOLOv8 classification + ALPR + Active Learning Queue
+│   │   ├── services/
+│   │   │   └── gdrive_sync.py  # 2-way Google Drive & Sheets offline synchronizer
 │   │   ├── database.py         # Timeseries store & pre-seeded IIT Mandi nodes
 │   │   ├── websocket_manager.py# Real-time WebSocket streaming (/ws/telemetry)
 │   │   ├── models.py           # Pydantic schemas for telemetry & breach payloads
@@ -38,12 +40,14 @@ DP-PROJECT/
 │   ├── main.py                 # ASGI entry point (port 8000)
 │   └── requirements.txt
 │
-├── backend/                    # Express.js REST API (Node.js + TypeScript - port 3001)
+├── rpi_camera_edge.py          # Standalone Raspberry Pi 5 Zero-SD edge streamer & radar daemon
+├── rpi5-edge-client/           # Raspberry Pi 5 systemd deployment service & client
+├── backend/                    # Express.js REST API (Node.js + TypeScript - port 3002)
 │   ├── src/                    # Hazards, GIS layers, user reporting
 │   ├── public/gis/            # Campus GeoJSON boundaries, roads, buildings
 │   └── package.json
 │
-├── campus-safety-dashboard/    # Admin Dashboard (Next.js 16 + Tailwind CSS)
+├── campus-safety-dashboard/    # Admin Dashboard (Next.js 16 + Tailwind CSS - port 3000)
 │   ├── src/app/dashboard/
 │   │   ├── traffic/           # 📡 Live Edge Radar Telemetry & ALPR Breaches
 │   │   ├── reports/           # Hazard reports management
@@ -51,7 +55,7 @@ DP-PROJECT/
 │   │   └── analytics/         # Historical safety compliance
 │   └── package.json
 │
-├── campus-safety-website/      # Public Website (Next.js 16 + Tailwind CSS)
+├── campus-safety-website/      # Public Citizen Website (Next.js 16 + Tailwind CSS - port 3001)
 │   ├── src/app/
 │   │   ├── traffic/           # 🚗 Live Campus Traffic Conditions for Students & Faculty
 │   │   ├── report/            # Hazard submission form with GPS pin
@@ -59,7 +63,7 @@ DP-PROJECT/
 │   │   └── map/               # Custom IIT Mandi GIS map
 │   └── package.json
 │
-├── render.yaml                 # 1-click Render blueprint for cloud backend
+├── start-all.bat               # 1-Click launcher for all 4 services
 └── README.md
 ```
 
@@ -105,6 +109,39 @@ When radar registers $V \ge V_{threshold}$:
 - FastAPI classifies vehicle type (Car, Bus, Truck, Motorcycle) and computes **Passenger Car Equivalent (PCE)** weighting.
 - Runs License Plate OCR (ALPR).
 - **Active Learning Queue**: If OCR confidence is $< 75\%$, the sample is automatically queued with a 20% anchor mix of historical data for background GPU fine-tuning, supporting zero-downtime weight hot-swapping in $<10\text{ ms}$.
+
+### 4. 24/7 Autonomous Cloud Storage & 2-Way Google Drive / Sheets Sync
+To ensure round-the-clock enforcement without requiring an always-on laptop or local server:
+- **Direct Hardware-to-Cloud Pipeline**:
+  - The roadside Raspberry Pi 5 unit connects to 24GHz Doppler Radar and the Sony IMX708 Camera.
+  - When a speed violation occurs or a road summary interval completes, telemetry metrics (speed, timestamp, vehicle count, compliance rate) are uploaded directly to a connected **Google Spreadsheet**, and high-resolution violation images are uploaded directly to a dedicated **Google Drive** folder via cloud webhooks.
+- **Strict Zero-SD Card Storage**:
+  - Images are captured, compressed, and streamed directly from volatile system RAM (0 bytes written to the Raspberry Pi SD card), eliminating flash memory wear and preventing hardware SD card corruption.
+- **Autonomous Offline Logging**:
+  - The edge node operates independently 24/7 over 4G LTE cellular connectivity. It continues capturing road statistics and logging breaches even when developer laptops, power lines, or central servers are offline.
+- **2-Way Central Sync (`gdrive_sync.py`)**:
+  - When the central FastAPI backend is started, a background synchronization worker automatically polls the Google Cloud endpoint every 60 seconds (or on-demand).
+  - It pulls all offline breaches and historical road segment summaries, runs ALPR license plate recognition on Drive images, and seamlessly merges them into the local database and dashboard.
+
+```mermaid
+flowchart LR
+    subgraph Edge ["Raspberry Pi 5 Roadside Unit"]
+        RADAR["24GHz Doppler Radar"] --> RPI["Zero-SD RAM Pipeline (rpi_camera_edge.py)"]
+        CAM["Sony IMX708 Camera"] --> RPI
+    end
+
+    subgraph Cloud ["Google Cloud (24/7 Autonomous)"]
+        RPI -- "Telemetry & Speeds" --> GS["Google Sheets\n(Live Speed Logs)"]
+        RPI -- "Evidence JPEGs" --> GD["Google Drive\n(Violation Photos)"]
+    end
+
+    subgraph Server ["RoadSentinel Central Platform"]
+        GS --> SYNC["FastAPI 2-Way Sync Engine\n(gdrive_sync.py)"]
+        GD --> ALPR["ALPR Plate Reader & ML Pipeline"]
+        SYNC --> DB[("SQLite Database")]
+        DB --> DASH["Admin Dashboard & Citizen Website"]
+    end
+```
 
 ---
 
