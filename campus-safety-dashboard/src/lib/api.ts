@@ -1,12 +1,12 @@
 const EXPRESS_BACKEND_URL = 'http://127.0.0.1:3002/api';
-const DEFAULT_PROD_URL = 'https://road-sentinel-backend.onrender.com/api';
+const LOCAL_FALLBACK_URL = 'http://localhost:3002/api';
 
 function getApiCandidates(): string[] {
   const envUrl = process.env.NEXT_PUBLIC_API_URL;
 
   // Express backend (port 3002) is the single source of truth for reports.
   // The dashboard's own /api route (port 3000) is only a fallback cache.
-  const candidates: string[] = [EXPRESS_BACKEND_URL, 'http://localhost:3002/api'];
+  const candidates: string[] = [EXPRESS_BACKEND_URL, LOCAL_FALLBACK_URL];
   if (envUrl) {
     const clean = envUrl.trim().replace(/\/+$/, '');
     const formatted = clean.endsWith('/api') ? clean : `${clean}/api`;
@@ -17,7 +17,6 @@ function getApiCandidates(): string[] {
   if (isBrowser) {
     candidates.push(`${window.location.origin}/api`);
   }
-  candidates.push(DEFAULT_PROD_URL);
   return Array.from(new Set(candidates.filter(Boolean)));
 }
 

@@ -6,16 +6,16 @@ The system pairs ultra-low-footprint edge sensing on roadside **Raspberry Pi 4 (
 
 ---
 
-## 🌐 Live Application Links (Live Testing)
+## 🌐 Application Access & Local Endpoints
 
-Test the complete application directly in your browser without setting up anything locally:
+Run the complete application locally using `start-all.bat` or individual service commands:
 
-| Application | Description | Live Link | Status |
-|-------------|-------------|-----------|--------|
-| 🌐 **Public Website** | Report hazards, track status, view live campus traffic & GIS map | [`https://roadsentiweb.vercel.app`](https://roadsentiweb.vercel.app) | **Live & Operational** ✅ |
-| 📊 **Admin Dashboard** | Review reports, radar telemetry, speed violations & active learning | [`https://roadsentidash.vercel.app/dashboard`](https://roadsentidash.vercel.app/dashboard) | **Live & Operational** ✅ |
-| ⚡ **FastAPI Traffic Engine** | High-throughput radar telemetry ingestion & statistical analytics | `http://localhost:8000/docs` | **Online & Active** ✅ |
-| ⚙️ **Backend REST API** | Live Express API serving reports and GIS GeoJSON data | [`https://road-sentinel-backend.onrender.com/api`](https://road-sentinel-backend.onrender.com/api) | **Online & Active** ✅ |
+| Application | Description | Local Access URL | Port / Service |
+|-------------|-------------|------------------|----------------|
+| 🌐 **Public Website** | Report hazards, track status, view live campus traffic & GIS map | [`http://localhost:3001`](http://localhost:3001) | Port 3001 (Next.js) |
+| 📊 **Admin Dashboard** | Review reports, radar telemetry, speed violations & active learning | [`http://localhost:3000/dashboard`](http://localhost:3000/dashboard) | Port 3000 (Next.js) |
+| ⚡ **FastAPI Traffic Engine** | High-throughput radar telemetry ingestion & statistical analytics | [`http://localhost:8000/docs`](http://localhost:8000/docs) | Port 8000 (FastAPI Swagger) |
+| ⚙️ **Backend REST API** | Express API serving reports and GIS GeoJSON data | [`http://localhost:3002/api`](http://localhost:3002/api) | Port 3002 (Express.js) |
 
 ---
 
@@ -133,17 +133,23 @@ g++ -std=c++17 -O3 edge_daemon.cpp -o edge_daemon -lcurl -lpthread
 ./edge_daemon
 ```
 
-### 4. Start Admin Dashboard & Public Website
+### 4. One-Click Launch (All Services)
+You can launch all 4 services concurrently using the included orchestrator script:
+```cmd
+start-all.bat
+```
+
+Or start each service manually in separate terminals:
 ```bash
 # Terminal A: Admin Dashboard (port 3000)
 cd campus-safety-dashboard
-npm run dev
+npm run dev -- -p 3000
 
-# Terminal B: Public Website (port 3002)
+# Terminal B: Public Citizen Website (port 3001)
 cd campus-safety-website
-npm run dev -- -p 3002
+npm run dev -- -p 3001
 
-# Terminal C: Express Backend (port 3001)
+# Terminal C: Express Backend (port 3002)
 cd backend
 npm run dev
 ```
