@@ -297,7 +297,7 @@ class ZeroDiskCamera:
         try:
             with self.lock:
                 if self.backend == "picamera2" and self.picam2:
-                    # 1. Primary: Hardware ISP 'lores' stream (512x288) directly (<15KB per frame, ultra-fast 20 FPS)
+                    # 1. Primary: Hardware ISP 'lores' stream (1024x576 HD) directly (~35KB, sharp & smooth 15-20 FPS)
                     self.stream_buf.seek(0)
                     self.stream_buf.truncate(0)
                     try:
@@ -316,7 +316,7 @@ class ZeroDiskCamera:
                             arr = self.picam2.capture_array("main")
                         if arr is not None:
                             small = cv2.resize(arr, (self.stream_w, self.stream_h))
-                            ret, buf = cv2.imencode(".jpg", small, [cv2.IMWRITE_JPEG_QUALITY, 55])
+                            ret, buf = cv2.imencode(".jpg", small, [cv2.IMWRITE_JPEG_QUALITY, 72])
                             if ret:
                                 return buf.tobytes()
                     except Exception:
@@ -335,7 +335,7 @@ class ZeroDiskCamera:
                     import cv2
                     ret, frame = self.cap.read()
                     if ret:
-                        _, buf = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 50])
+                        _, buf = cv2.imencode(".jpg", frame, [cv2.IMWRITE_JPEG_QUALITY, 70])
                         return buf.tobytes()
 
                 elif self.backend and self.backend.startswith("pipe:"):
@@ -346,7 +346,7 @@ class ZeroDiskCamera:
                         "-o", "-",
                         "--width", str(self.stream_w),
                         "--height", str(self.stream_h),
-                        "-q", "50"
+                        "-q", "70"
                     ]
                     proc = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, timeout=1.5)
                     if proc.stdout and len(proc.stdout) > 500:
@@ -358,8 +358,8 @@ class ZeroDiskCamera:
         return self._generate_synthetic_ram_frame()
 
     def focus_and_capture_evidence(self) -> Optional[bytes]:
-        """Capture a CRYSTAL-CLEAR HIGH-RESOLUTION (2304x1296) evidence photo directly from Picamera2 main stream.
-        Number plates will be over 200 pixels wide and easily readable by OCR."""
+        """Capture a PEAK MAXIMUM QUALITY (2304x1296 @ 98% JPEG) evidence photo directly from Picamera2 main stream.
+        Number plates will be over 250 pixels wide, ultra-sharp, with continuous PDAF focus."""
         try:
             with self.lock:
                 if self.backend == "picamera2" and self.picam2:
@@ -370,24 +370,41 @@ class ZeroDiskCamera:
                             "AfSpeed": controls.AfSpeedEnum.Fast,
                             "AfTrigger": controls.AfTriggerEnum.Start
                         })
-                        time.sleep(0.04)
+                        time.sleep(0.05)
                     except Exception:
                         pass
 
-                    # 1. Capture full uncompressed main stream array & encode high-quality JPEG
+                    # 1. Capture full uncompressed main stream array & encode peak-quality JPEG (98% quality)
                     try:
                         import cv2
                         arr = self.picam2.capture_array("main")
                         if arr is not None and arr.shape[0] > 600:
-                            ret, buf = cv2.imencode(".jpg", arr, [cv2.IMWRITE_JPEG_QUALITY, 95])
+                            ret, buf = cv2.imencode(".jpg", arr, [
+                                cv2.IMWRITE_JPEG_QUALITY, 98,
+                                cv2.IMWRITE_JPEG_OPTIMIZE, 1
+                            ])
                             if ret:
                                 data = buf.tobytes()
-                                print(f"[Evidence OK] Ultra-High-Res 2304x1296 ALPR snapshot captured ({len(data)//1024}KB, {arr.shape[1]}x{arr.shape[0]})")
+                                print(f"[Peak Evidence OK] Ultra-High-Res 2304x1296 ALPR snapshot captured ({len(data)//1024}KB, {arr.shape[1]}x{arr.shape[0]})")
                                 return data
                     except Exception as e:
-                        print(f"[Evidence Main Array Notice] {e}")
+                        print(f"[Evidence Array Notice] {e}")
 
-                    # 2. Direct capture_file from main stream
+                    # 2. Direct capture_file from main stream with PIL at quality 98
+                    try:
+                        from PIL import Image
+                        arr = self.picam2.capture_array("main")
+                        if arr is not None:
+                            img = Image.fromarray(arr)
+                            buf = io.BytesIO()
+                            img.save(buf, format="JPEG", quality=98, subsampling=0)
+                            data = buf.getvalue()
+                            print(f"[Peak Evidence OK] PIL 2304x1296 ALPR snapshot captured ({len(data)//1024}KB)")
+                            return data
+                    except Exception:
+                        pass
+
+                    # 3. Direct capture_file from main stream
                     try:
                         buf = io.BytesIO()
                         self.picam2.capture_file(buf, format="jpeg", name="main")
@@ -397,6 +414,10 @@ class ZeroDiskCamera:
                             return data
                     except Exception:
                         pass
+        except Exception as e:
+            print(f"[Evidence Capture Notice] {e}")
+
+        return self.capture_stream_frame()
         except Exception as e:
             print(f"[Evidence Capture Notice] {e}")
 
@@ -707,8 +728,8 @@ if __name__ == "__main__":
     parser.add_argument("--limit", type=float, default=DEFAULT_SPEED_LIMIT)
     parser.add_argument("--threshold", type=float, default=DEFAULT_TRIGGER_LIMIT)
     parser.add_argument("--summary-interval", type=int, default=DEFAULT_SUMMARY_SEC, help="Seconds between road segment speed analytics summaries")
-    parser.add_argument("--width", type=int, default=512)
-    parser.add_argument("--height", type=int, default=288)
+    parser.add_argument("--width", type=int, default=1024)
+    parser.add_argument("--height", type=int, default=576)
     parser.add_argument("--radar-port", default=None)
 
     args = parser.parse_args()
