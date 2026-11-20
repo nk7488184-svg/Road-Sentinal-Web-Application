@@ -83,3 +83,22 @@ def analyze_image(file: UploadFile = File(...)):
     buf = io.BytesIO()
     out.save(buf, "JPEG", quality=90)
     return Response(content=buf.getvalue(), media_type="image/jpeg")
+
+@router.post("/anpr/auto-process")
+def trigger_auto_process():
+    """Immediately triggers the autonomous ALPR batch processor across all loaded evidence & sync photos."""
+    from app.services.auto_alpr_daemon import alpr_daemon
+    result = alpr_daemon.process_all_loaded_photos()
+    return result
+
+@router.get("/anpr/auto-status")
+def get_auto_alpr_status():
+    """Returns the operational status of the autonomous background ALPR daemon."""
+    from app.services.auto_alpr_daemon import alpr_daemon
+    return {
+        "daemon_running": alpr_daemon.running,
+        "last_scan_time": alpr_daemon.last_scan_time,
+        "total_images_processed": alpr_daemon.total_processed,
+        "total_plates_recognized": alpr_daemon.total_plates_recognized,
+        "active_learning_routed": alpr_daemon.active_learning_routed
+    }

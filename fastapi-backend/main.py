@@ -33,6 +33,13 @@ async def startup_event():
     except Exception as e:
         print(f"[Startup Warning] Could not start Google Drive sync daemon: {e}")
 
+    try:
+        from app.services.auto_alpr_daemon import alpr_daemon
+        print("[Startup] Starting Autonomous ALPR Daemon (continuous plate recognition & auto-enhancement)...")
+        alpr_daemon.start_daemon(interval_sec=30)
+    except Exception as e:
+        print(f"[Startup Warning] Could not start Autonomous ALPR daemon: {e}")
+
 # Enable CORS for Next.js Website & Dashboard frontends
 app.use_all_cors = True
 app.add_middleware(
