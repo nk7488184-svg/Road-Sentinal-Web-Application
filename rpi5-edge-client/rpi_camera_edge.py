@@ -297,7 +297,7 @@ class ZeroDiskCamera:
         try:
             with self.lock:
                 if self.backend == "picamera2" and self.picam2:
-                    # 1. Primary: Hardware ISP 'lores' stream (1024x576 HD) directly (~35KB, sharp & smooth 15-20 FPS)
+                    # 1. Primary: Hardware ISP 'lores' stream (640x360 360p) directly (~18-20KB, minimal data usage, smooth 15-20 FPS)
                     self.stream_buf.seek(0)
                     self.stream_buf.truncate(0)
                     try:
@@ -316,7 +316,7 @@ class ZeroDiskCamera:
                             arr = self.picam2.capture_array("main")
                         if arr is not None:
                             small = cv2.resize(arr, (self.stream_w, self.stream_h))
-                            ret, buf = cv2.imencode(".jpg", small, [cv2.IMWRITE_JPEG_QUALITY, 72])
+                            ret, buf = cv2.imencode(".jpg", small, [cv2.IMWRITE_JPEG_QUALITY, 62])
                             if ret:
                                 return buf.tobytes()
                     except Exception:
@@ -728,8 +728,8 @@ if __name__ == "__main__":
     parser.add_argument("--limit", type=float, default=DEFAULT_SPEED_LIMIT)
     parser.add_argument("--threshold", type=float, default=DEFAULT_TRIGGER_LIMIT)
     parser.add_argument("--summary-interval", type=int, default=DEFAULT_SUMMARY_SEC, help="Seconds between road segment speed analytics summaries")
-    parser.add_argument("--width", type=int, default=1024)
-    parser.add_argument("--height", type=int, default=576)
+    parser.add_argument("--width", type=int, default=640)
+    parser.add_argument("--height", type=int, default=360)
     parser.add_argument("--radar-port", default=None)
 
     args = parser.parse_args()
