@@ -139,6 +139,52 @@ def run_ml_inference(payload: SpeedBreachPayload, image_path: Optional[str]) -> 
                 vehicles = res.get("vehicles", [])
                 unassigned = res.get("unassigned_plates", [])
 
+                # -------------------------------------------------------------
+                # MULTI-FRAME MOTION DISPLACEMENT FILTER (PARKED VEHICLE REJECTION)
+                # -------------------------------------------------------------
+                # If a burst sequence of 2-5 frames was provided, check centroid
+                # displacement between first and last frame to identify MOVING vs PARKED cars.
+                burst_b64 = getattr(payload, "burst_images_base64", None)
+                if burst_b64 and len(burst_b64) >= 2 and vehicles:
+                    try:
+                        import io
+                        import base64
+                        import math
+                        first_bytes = base64.b64decode(burst_b64[0])
+                        img_first = Image.open(io.BytesIO(first_bytes)).convert("RGB")
+                        res_first = anpr.analyze(img_first, read_text=False)
+                        v_first = res_first.get("vehicles", [])
+
+                        if v_first:
+                            for v in vehicles:
+                                bx1, by1, bx2, by2 = v["box"]
+                                cx = (bx1 + bx2) / 2.0
+                                cy = (by1 + by2) / 2.0
+
+                                # Find nearest vehicle in initial frame
+                                min_dist = float("inf")
+                                for vf in v_first:
+                                    fx1, fy1, fx2, fy2 = vf["box"]
+                                    fcx = (fx1 + fx2) / 2.0
+                                    fcy = (fy1 + fy2) / 2.0
+                                    dist = math.hypot(cx - fcx, cy - fcy)
+                                    if dist < min_dist:
+                                        min_dist = dist
+
+                                # Parked/stationary roadside vehicles move < 20 pixels
+                                # Moving/speeding vehicles shift significantly (> 20 pixels)
+                                v["displacement_px"] = round(min_dist, 1)
+                                v["is_moving"] = (min_dist >= 20.0)
+
+                            moving_vehicles = [v for v in vehicles if v.get("is_moving")]
+                            if moving_vehicles:
+                                print(f"[Motion Tracker] Detected {len(moving_vehicles)} moving vehicle(s) (filtered out {len(vehicles) - len(moving_vehicles)} stationary/parked vehicle(s))")
+                                vehicles = moving_vehicles
+                            else:
+                                print("[Motion Tracker] No vehicle exceeded 20px displacement; retaining all detected vehicles as fallback.")
+                    except Exception as e:
+                        print(f"[Motion Tracking Notice] {e}")
+
                 # 1. Check if YOLOv8 plate detector found a plate on a vehicle
                 for v in vehicles:
                     plate_obj = v.get("plate")

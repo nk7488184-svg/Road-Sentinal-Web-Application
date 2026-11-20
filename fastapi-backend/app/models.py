@@ -120,6 +120,7 @@ class SpeedBreachPayload(BaseModel):
     license_plate: Optional[str] = None
     vehicle_type: Optional[str] = None
     image_base64: Optional[str] = None
+    burst_images_base64: Optional[List[str]] = Field(default=None, description="Burst sequence of 3-5 frames for motion tracking & parked car filtering")
     road_name: Optional[str] = "Behind A11 on New Construction Road"
     latitude: Optional[float] = 31.7807
     longitude: Optional[float] = 76.9967

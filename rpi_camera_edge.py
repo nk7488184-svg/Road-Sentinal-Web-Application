@@ -433,6 +433,18 @@ class ZeroDiskCamera:
 
         return self.capture_stream_frame()
 
+    def capture_evidence_burst(self, count: int = 3, interval: float = 0.08) -> List[bytes]:
+        """Captures a rapid burst of 3-5 evidence photos strictly in volatile RAM.
+        Enables the server YOLOv8 pipeline to track vehicle displacement and ignore parked roadside cars."""
+        frames = []
+        for i in range(count):
+            f = self.focus_and_capture_evidence() or self.capture_stream_frame()
+            if f:
+                frames.append(f)
+            if i < count - 1 and interval > 0:
+                time.sleep(interval)
+        return frames if frames else [self._generate_synthetic_ram_frame()]
+
     def _generate_synthetic_ram_frame(self) -> bytes:
         try:
             from PIL import Image, ImageDraw
@@ -590,10 +602,17 @@ def send_live_speed(backend_url: str, device_id: str, speed: float, is_present: 
 
 def post_speed_breach_dual(backend_url: str, cloud_dispatcher: RamCloudDispatcher,
                            device_id: str, road_name: str, speed: float,
-                           limit: float, frame_bytes: bytes):
-    b64_str = base64.b64encode(frame_bytes).decode("utf-8")
+                           limit: float, frames: Union[bytes, List[bytes]]):
+    if not frames:
+        return
+    frame_list = [frames] if isinstance(frames, bytes) else list(frames)
+    last_frame = frame_list[-1]
+    last_b64 = base64.b64encode(last_frame).decode("utf-8")
+    burst_b64 = [base64.b64encode(f).decode("utf-8") for f in frame_list]
     ts_now = datetime.now(timezone.utc).isoformat()
-    payload = {
+
+    # 1. Drive payload: ONLY LAST PHOTO is submitted to Google Drive
+    drive_payload = {
         "type": "breach",
         "device_id": device_id,
         "road_name": road_name,
@@ -601,17 +620,27 @@ def post_speed_breach_dual(backend_url: str, cloud_dispatcher: RamCloudDispatche
         "speed_kmh": speed,
         "speed": speed,
         "timestamp": ts_now,
-        "image_base64": b64_str
+        "image_base64": last_b64
+    }
+    cloud_dispatcher.submit_event(drive_payload)
+
+    # 2. Server payload: sends the burst sequence so YOLOv8 tracks motion across frames
+    server_payload = {
+        "type": "breach",
+        "device_id": device_id,
+        "road_name": road_name,
+        "posted_limit_kmh": limit,
+        "speed_kmh": speed,
+        "speed": speed,
+        "timestamp": ts_now,
+        "image_base64": last_b64,
+        "burst_images_base64": burst_b64
     }
 
-    # Always send to Google Drive
-    cloud_dispatcher.submit_event(payload)
-
-    # Also post to website
     url = f"{backend_url.rstrip('/')}/api/v1/telemetry/breach"
     try:
         t0 = time.time()
-        res = http_session.post(url, json=payload, timeout=15)
+        res = http_session.post(url, json=server_payload, timeout=15)
         dt = time.time() - t0
         if res.status_code == 200:
             data = res.json().get("data", {})
@@ -697,15 +726,16 @@ def run_client(args):
                 if speed >= args.threshold and (now_time - last_overspeed_trigger >= 3.0):
                     last_overspeed_trigger = now_time
                     print(f"\n[🚨 REAL OVERSPEED DETECTED!] Vehicle: {speed:.1f} km/h >= {args.threshold} km/h limit!")
-                    print(" [Camera Focus Mode] Snapping high-res ALPR evidence...")
-                    breach_frame = camera.focus_and_capture_evidence() or frame_bytes
-                    if breach_frame:
-                        threading.Thread(
-                            target=post_speed_breach_dual,
-                            args=(active_backend, cloud_dispatcher, args.device_id,
-                                  args.road_name, speed, args.limit, breach_frame),
-                            daemon=True
-                        ).start()
+                    print(" [Camera Burst Mode] Snapping 3-frame burst ALPR evidence for motion tracking...")
+                    burst_frames = camera.capture_evidence_burst(count=3, interval=0.08)
+                    if not burst_frames:
+                        burst_frames = [frame_bytes]
+                    threading.Thread(
+                        target=post_speed_breach_dual,
+                        args=(active_backend, cloud_dispatcher, args.device_id,
+                              args.road_name, speed, args.limit, burst_frames),
+                        daemon=True
+                    ).start()
             else:
                 if now_time - last_idle_heartbeat >= 2.0:
                     last_idle_heartbeat = now_time
