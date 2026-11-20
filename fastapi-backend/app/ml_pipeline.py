@@ -82,10 +82,15 @@ def get_anpr():
 
 
 def format_indian_plate(raw_text: str) -> str:
-    """Cleans and standardizes Indian HSRP license plate format e.g. HP33B4921 -> HP 33 B 4921."""
+    """Cleans, error-corrects, and standardizes Indian HSRP license plate format e.g. HP33B4921 -> HP 33 B 4921."""
     import re
-    cleaned = re.sub(r"[^A-Z0-9]", "", raw_text.upper())
-    # Format Standard e.g. HP 33 B 4921 or DL 8C AM 4901
+    try:
+        from pipeline import correct_indian_plate
+        cleaned = correct_indian_plate(raw_text)
+    except Exception:
+        cleaned = re.sub(r"[^A-Z0-9]", "", raw_text.upper())
+
+    # Format Standard e.g. HP 33 B 4921 or DL 08 C 4901
     m1 = re.match(r"^([A-Z]{2})(\d{1,2})([A-Z]{1,3})(\d{1,4})$", cleaned)
     if m1:
         return f"{m1.group(1)} {m1.group(2)} {m1.group(3)} {m1.group(4)}"
@@ -93,6 +98,10 @@ def format_indian_plate(raw_text: str) -> str:
     m2 = re.match(r"^([A-Z]{2})(\d{1,2})(\d{3,4})$", cleaned)
     if m2:
         return f"{m2.group(1)} {m2.group(2)} {m2.group(3)}"
+    # Format BH series e.g. 22 BH 1234 AA
+    m3 = re.match(r"^(\d{2})(BH)(\d{4})([A-Z]{1,2})$", cleaned)
+    if m3:
+        return f"{m3.group(1)} {m3.group(2)} {m3.group(3)} {m3.group(4)}"
     return cleaned
 
 
