@@ -28,7 +28,7 @@ import subprocess
 import io
 import queue
 from datetime import datetime, timezone
-from typing import Optional, List
+from typing import Optional, List, Union, Dict, Any
 
 # Only 1 external library required: requests
 try:
@@ -602,7 +602,7 @@ def send_live_speed(backend_url: str, device_id: str, speed: float, is_present: 
 
 def post_speed_breach_dual(backend_url: str, cloud_dispatcher: RamCloudDispatcher,
                            device_id: str, road_name: str, speed: float,
-                           limit: float, frames: Union[bytes, List[bytes]]):
+                           limit: float, frames):
     if not frames:
         return
     frame_list = [frames] if isinstance(frames, bytes) else list(frames)
