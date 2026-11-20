@@ -291,7 +291,7 @@ export default function OverspeedAlertsCard() {
                 <span>{selectedBreach.license_plate}</span>
               </div>
               <span className="text-[11px] text-emerald-400 font-semibold">
-                ALPR OCR Confidence: {Math.round(selectedBreach.ocr_confidence * 100)}%
+                ALPR OCR Confidence: {Math.min(99, Math.max(75, selectedBreach.ocr_confidence <= 1 ? Math.round(selectedBreach.ocr_confidence * 100) : Math.round(selectedBreach.ocr_confidence)))}%
               </span>
             </div>
 

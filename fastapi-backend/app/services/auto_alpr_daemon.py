@@ -43,6 +43,27 @@ CAMPUS_PLATE_REGISTRY = [
     "CH 01 AB 9081"
 ]
 
+INDIAN_STATE_CODES = {"HP", "PB", "DL", "CH", "HR", "UP", "UK", "JK", "RJ", "MH", "GJ", "KA", "TN", "KL", "TS", "AP", "WB"}
+
+def is_valid_hsrp_plate(plate: str, conf: float = 1.0) -> bool:
+    """Strictly validates if a plate string is an authentic Indian HSRP number plate."""
+    if not plate or conf < 0.60:
+        return False
+    clean = re.sub(r"[^A-Z0-9]", "", plate.upper())
+    if len(clean) < 7 or len(clean) > 11:
+        return False
+    # State prefix
+    prefix = clean[:2]
+    if prefix not in INDIAN_STATE_CODES:
+        return False
+    # District code (digits)
+    if not (clean[2:4].isdigit() or clean[2:3].isdigit()):
+        return False
+    # Trailing digits
+    if not clean[-3:].isdigit():
+        return False
+    return True
+
 
 class AutonomousALPRDaemon:
     def __init__(self):
@@ -79,8 +100,9 @@ class AutonomousALPRDaemon:
             ocr_res = pipeline.read_plate(pcrop)
             raw_text = ocr_res.get("text", "").strip()
             conf = float(ocr_res.get("ocr_confidence", 0.0))
-            if raw_text and len(raw_text) >= 4:
-                return format_indian_plate(raw_text), max(conf, 0.78), True
+            formatted = format_indian_plate(raw_text)
+            if is_valid_hsrp_plate(formatted, max(conf, 0.78)):
+                return formatted, max(conf, 0.78), True
 
         # 2. Secondary: Lower Bumper Crop Scanning (lower 45% of vehicle)
         bumper_y1 = int(vh * 0.50)
@@ -93,8 +115,9 @@ class AutonomousALPRDaemon:
             ocr_res = pipeline.read_plate(pcrop)
             raw_text = ocr_res.get("text", "").strip()
             conf = float(ocr_res.get("ocr_confidence", 0.0))
-            if raw_text and len(raw_text) >= 4:
-                return format_indian_plate(raw_text), max(conf, 0.72), True
+            formatted = format_indian_plate(raw_text)
+            if is_valid_hsrp_plate(formatted, max(conf, 0.72)):
+                return formatted, max(conf, 0.72), True
 
         # 3. Enhanced direct OCR with super-upscale
         if pipeline.reader is not None:
@@ -109,8 +132,9 @@ class AutonomousALPRDaemon:
             ocr_items = pipeline.reader.readtext(cl, detail=1)
             for box, text, conf in ocr_items:
                 clean = re.sub(r"[^A-Z0-9]", "", text.upper())
-                if len(clean) >= 4:
-                    return format_indian_plate(clean), round(float(conf), 4), True
+                formatted = format_indian_plate(clean)
+                if float(conf) >= 0.65 and is_valid_hsrp_plate(formatted, float(conf)):
+                    return formatted, round(float(conf), 4), True
 
         return "", 0.0, False
 
@@ -211,11 +235,15 @@ class AutonomousALPRDaemon:
                 # Does this breach need ALPR detection?
                 needs_alpr = (
                     not plate
+                    or not is_valid_hsrp_plate(plate, float(b.get("ocr_confidence", 0.0)))
+                    or float(b.get("ocr_confidence", 0.0)) < 0.60
                     or "Reviewing" in plate
                     or "WAITING" in plate
                     or "UNKNOWN" in plate
                     or "PLATE_UNREADABLE" in plate
+                    or "PLATE UNREADABLE" in plate
                     or "NO_PLATE" in plate
+                    or "PENDING" in plate
                 )
 
                 if not needs_alpr:
@@ -241,7 +269,7 @@ class AutonomousALPRDaemon:
                         rec_plate = result.get("license_plate", "")
                         conf = result.get("ocr_confidence", 0.0)
 
-                        if rec_plate and len(rec_plate) >= 4:
+                        if rec_plate and is_valid_hsrp_plate(rec_plate, conf):
                             b["license_plate"] = rec_plate
                             b["ocr_confidence"] = conf
                             b["vehicle_type"] = v_type

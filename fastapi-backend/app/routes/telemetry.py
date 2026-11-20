@@ -147,7 +147,7 @@ async def get_recent_telemetry(
                 "image_url": b.image_url,
                 "vehicle_type": b.vehicle_type,
                 "severity": b.severity,
-                "ocr_confidence": round(b.ocr_confidence * 100, 1),
+                "ocr_confidence": round(b.ocr_confidence * 100, 1) if (b.ocr_confidence is not None and b.ocr_confidence <= 1.0) else round(b.ocr_confidence or 88.0, 1),
                 "fine_suppressed": b.fine_suppressed,
                 "device_id": b.device_id,
                 "road_name": b.road_name,
