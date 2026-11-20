@@ -297,10 +297,23 @@ class ZeroDiskCamera:
         try:
             with self.lock:
                 if self.backend == "picamera2" and self.picam2:
+                    # 1. Primary: Hardware ISP 'lores' stream (512x288) directly (<15KB per frame, ultra-fast 20 FPS)
+                    self.stream_buf.seek(0)
+                    self.stream_buf.truncate(0)
+                    try:
+                        self.picam2.capture_file(self.stream_buf, format="jpeg", name="lores")
+                        data = self.stream_buf.getvalue()
+                        if len(data) > 1000:
+                            return data
+                    except Exception:
+                        pass
+
+                    # 2. Secondary: capture array and resize if OpenCV is available
                     try:
                         import cv2
-                        # Primary: Capture from main ISP array and downscale for web stream
-                        arr = self.picam2.capture_array("main")
+                        arr = self.picam2.capture_array("lores")
+                        if arr is None:
+                            arr = self.picam2.capture_array("main")
                         if arr is not None:
                             small = cv2.resize(arr, (self.stream_w, self.stream_h))
                             ret, buf = cv2.imencode(".jpg", small, [cv2.IMWRITE_JPEG_QUALITY, 55])
@@ -309,7 +322,7 @@ class ZeroDiskCamera:
                     except Exception:
                         pass
 
-                    # Fallback: capture_file JPEG
+                    # 3. Fallback: capture_file JPEG
                     self.stream_buf.seek(0)
                     self.stream_buf.truncate(0)
                     try:
