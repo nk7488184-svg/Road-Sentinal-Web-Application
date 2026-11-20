@@ -96,6 +96,9 @@ class CameraStore:
 
     def _generate_standby_frame(self) -> bytes:
         """Dynamic placeholder frame when RPi camera stream is waiting or initializing."""
+        now = time.time()
+        if hasattr(self, "_cached_standby") and (now - getattr(self, "_cached_standby_time", 0)) < 1.0:
+            return self._cached_standby
         w, h = 640, 360
         img = Image.new("RGB", (w, h), color=(18, 22, 28))
         draw = ImageDraw.Draw(img)
@@ -111,12 +114,14 @@ class CameraStore:
         draw.rectangle([120, 100, 520, 210], fill=(24, 28, 36), outline=(50, 60, 75), width=2)
         draw.text((140, 115), "RoadSentinel RPi 5 Edge Camera Node", fill=(240, 240, 245))
         draw.text((140, 138), f"Location: {self.road_name}", fill=(160, 175, 200))
-        draw.text((140, 160), "Status: Zero-Storage RAM Buffer Active", fill=(52, 211, 153))
+        draw.text((140, 160), "Status: Waiting for RPi Camera Stream...", fill=(245, 158, 11))
         draw.text((140, 180), f"Clock: {now_str}", fill=(140, 145, 160))
 
         buf = io.BytesIO()
         img.save(buf, format="JPEG", quality=85)
-        return buf.getvalue()
+        self._cached_standby = buf.getvalue()
+        self._cached_standby_time = now
+        return self._cached_standby
 
 camera_store = CameraStore()
 
@@ -222,7 +227,7 @@ async def get_live_mjpeg_stream():
         last_id = -1
         while True:
             frame, fid = camera_store.get_latest_frame_with_id()
-            if fid != last_id or fid == 0:
+            if fid != last_id or last_id == -1:
                 last_id = fid
                 yield (
                     b"--frame\r\n"
@@ -230,7 +235,7 @@ async def get_live_mjpeg_stream():
                     b"Content-Length: " + str(len(frame)).encode() + b"\r\n\r\n" +
                     frame + b"\r\n"
                 )
-            await asyncio.sleep(0.02)
+            await asyncio.sleep(0.04 if fid > 0 else 0.5)
 
     return StreamingResponse(
         frame_generator(),
