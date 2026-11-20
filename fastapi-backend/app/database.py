@@ -597,7 +597,17 @@ class TelemetryStore:
         return list(reversed(res[-limit:]))
 
     def get_breaches(self, limit: int = 50) -> List[ProcessedBreachRecord]:
-        return self.breaches[:limit]
+        def _parse(ts):
+            if not ts:
+                return datetime.min.replace(tzinfo=timezone.utc)
+            try:
+                dt = datetime.fromisoformat(str(ts).replace('Z', '+00:00'))
+                if dt.tzinfo is None:
+                    dt = dt.replace(tzinfo=timezone.utc)
+                return dt
+            except Exception:
+                return datetime.min.replace(tzinfo=timezone.utc)
+        return sorted(self.breaches, key=lambda b: _parse(b.timestamp), reverse=True)[:limit]
 
     def get_summary_stats(self) -> dict:
         """Returns consolidated campus-wide KPI stats for UI cards."""

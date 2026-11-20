@@ -8,8 +8,11 @@ def parse_iso_or_now(ts_str: str | None) -> datetime:
         return datetime.now(timezone.utc)
     try:
         # replace Z if present
-        clean = ts_str.replace('Z', '+00:00')
-        return datetime.fromisoformat(clean)
+        clean = str(ts_str).replace('Z', '+00:00')
+        dt = datetime.fromisoformat(clean)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+        return dt
     except Exception:
         return datetime.now(timezone.utc)
 

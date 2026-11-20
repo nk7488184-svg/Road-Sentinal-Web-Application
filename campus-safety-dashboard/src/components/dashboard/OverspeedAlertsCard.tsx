@@ -92,11 +92,21 @@ export default function OverspeedAlertsCard() {
     try {
       const res = await fetchFromFastApi("/api/v1/telemetry/recent?minutes=1440");
       if (res?.breaches && Array.isArray(res.breaches) && res.breaches.length > 0) {
-        setBreaches(res.breaches);
+        const sorted = [...res.breaches].sort((a: any, b: any) => {
+          const ta = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+          const tb = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+          return tb - ta;
+        });
+        setBreaches(sorted);
       } else {
         const directRes = await fetchFromFastApi("/api/v1/telemetry/breaches?limit=8");
         if (directRes?.data && Array.isArray(directRes.data) && directRes.data.length > 0) {
-          setBreaches(directRes.data);
+          const sorted = [...directRes.data].sort((a: any, b: any) => {
+            const ta = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+            const tb = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+            return tb - ta;
+          });
+          setBreaches(sorted);
         }
       }
     } catch {

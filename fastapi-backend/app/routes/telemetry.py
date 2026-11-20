@@ -123,8 +123,8 @@ async def get_recent_telemetry(
             else:
                 speed_buckets["31-45 km/h"] += s.vehicle_count
 
-    # 2. Filter and format breaches
-    all_breaches = db.breaches
+    # 2. Filter and format breaches (Always sort newest first)
+    all_breaches = sorted(db.breaches, key=lambda b: parse_iso_or_now(b.timestamp), reverse=True)
     if device_id:
         all_breaches = [b for b in all_breaches if b.device_id == device_id]
 

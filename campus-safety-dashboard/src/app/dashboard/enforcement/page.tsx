@@ -78,6 +78,7 @@ interface BreachEvent {
   id: number;
   node_id: string;
   timestamp: string;
+  raw_timestamp?: string;
   radar_speed_kmh: number;
   speed_limit_kmh: number;
   overspeed_pct: number;
@@ -345,6 +346,12 @@ export default function EnforcementPage() {
             const validReal = data.breaches.filter(
               (b: any) => (b.speed_kmh || b.speed || 0) > 5
             );
+            // Strictly sort newest breaches first (descending by timestamp)
+            validReal.sort((a: any, b: any) => {
+              const ta = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+              const tb = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+              return tb - ta;
+            });
             const mappedReal: BreachEvent[] = validReal.map((b: any, idx: number) => {
               const d = b.timestamp ? new Date(b.timestamp) : null;
               const timeStr = d
@@ -380,6 +387,7 @@ export default function EnforcementPage() {
                 id: 4000 + idx,
                 node_id: "RPI4_CAMERA_UNIT_01",
                 timestamp: timeStr,
+                raw_timestamp: b.timestamp,
                 radar_speed_kmh: spd,
                 speed_limit_kmh: limit,
                 overspeed_pct: Math.round(((spd - limit) / limit) * 100),
@@ -437,6 +445,11 @@ export default function EnforcementPage() {
           const validReal = data.breaches.filter(
             (b: any) => (b.speed_kmh || b.speed || 0) > 5
           );
+          validReal.sort((a: any, b: any) => {
+            const ta = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+            const tb = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+            return tb - ta;
+          });
           const mappedReal: BreachEvent[] = validReal.map((b: any, idx: number) => {
             const d = b.timestamp ? new Date(b.timestamp) : null;
             const timeStr = d
@@ -464,6 +477,7 @@ export default function EnforcementPage() {
               id: 4000 + idx,
               node_id: "RPI4_CAMERA_UNIT_01",
               timestamp: timeStr,
+              raw_timestamp: b.timestamp,
               radar_speed_kmh: spd,
               speed_limit_kmh: limit,
               overspeed_pct: Math.round(((spd - limit) / limit) * 100),
@@ -529,6 +543,13 @@ export default function EnforcementPage() {
       if (statusFilter !== "all" && b.status !== statusFilter) return false;
       if (vehicleFilter !== "all" && b.vehicle_class !== vehicleFilter) return false;
       return true;
+    });
+
+    // Ensure list is strictly sorted newest first
+    list.sort((a, b) => {
+      const ta = a.raw_timestamp ? new Date(a.raw_timestamp).getTime() : 0;
+      const tb = b.raw_timestamp ? new Date(b.raw_timestamp).getTime() : 0;
+      return tb - ta;
     });
 
     if (breachViewMode === "date" && selectedDate !== "all") {
