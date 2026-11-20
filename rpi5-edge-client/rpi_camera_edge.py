@@ -220,7 +220,7 @@ class SegmentSpeedAggregator:
 # High-Efficiency Zero-Disk Camera Adapter (Hardware Binned + NEON SIMD)
 # ---------------------------------------------------------------------------
 class ZeroDiskCamera:
-    def __init__(self, stream_w: int = 512, stream_h: int = 288):
+    def __init__(self, stream_w: int = 640, stream_h: int = 360):
         self.stream_w = stream_w
         self.stream_h = stream_h
         self.backend = None
@@ -231,7 +231,7 @@ class ZeroDiskCamera:
 
         print("[Camera Init] Initializing ultra-fast hardware camera pipeline...")
 
-        # 1. Picamera2 with Hardware Dual-Stream (2304x1296 Main for ALPR + 512x288 Lores for Web Stream)
+        # 1. Picamera2 with Hardware Dual-Stream (2304x1296 Main for ALPR + Crisp Lores for Web Stream)
         try:
             from picamera2 import Picamera2
             self.picam2 = Picamera2()
@@ -263,8 +263,8 @@ class ZeroDiskCamera:
 
             time.sleep(0.5)
             return
-        except Exception:
-            pass
+        except Exception as e:
+            print(f"[Camera Init Note] Picamera2 init: {e}")
 
         # 2. OpenCV VideoCapture
         try:
@@ -297,7 +297,35 @@ class ZeroDiskCamera:
         try:
             with self.lock:
                 if self.backend == "picamera2" and self.picam2:
-                    # 1. Primary: Hardware ISP 'lores' stream (1024x576 HD) directly (~35KB, sharp & smooth 15-20 FPS)
+                    # 1. Primary: capture_array from lores or main and encode via cv2 (~22KB sharp crisp frame)
+                    try:
+                        import cv2
+                        arr = None
+                        try:
+                            arr = self.picam2.capture_array("lores")
+                        except Exception:
+                            pass
+                        if arr is None:
+                            try:
+                                arr = self.picam2.capture_array("main")
+                            except Exception:
+                                pass
+                        if arr is not None:
+                            if len(arr.shape) == 3 and arr.shape[2] == 4:
+                                bgr = cv2.cvtColor(arr, cv2.COLOR_BGRA2BGR)
+                            elif len(arr.shape) == 3 and arr.shape[2] == 3:
+                                bgr = cv2.cvtColor(arr, cv2.COLOR_RGB2BGR)
+                            else:
+                                bgr = arr
+                            if bgr.shape[1] != self.stream_w or bgr.shape[0] != self.stream_h:
+                                bgr = cv2.resize(bgr, (self.stream_w, self.stream_h))
+                            ret, buf = cv2.imencode(".jpg", bgr, [cv2.IMWRITE_JPEG_QUALITY, 76])
+                            if ret:
+                                return buf.tobytes()
+                    except Exception:
+                        pass
+
+                    # 2. Secondary: Hardware ISP 'lores' stream directly to BytesIO
                     self.stream_buf.seek(0)
                     self.stream_buf.truncate(0)
                     try:
@@ -308,21 +336,7 @@ class ZeroDiskCamera:
                     except Exception:
                         pass
 
-                    # 2. Secondary: capture array and resize if OpenCV is available
-                    try:
-                        import cv2
-                        arr = self.picam2.capture_array("lores")
-                        if arr is None:
-                            arr = self.picam2.capture_array("main")
-                        if arr is not None:
-                            small = cv2.resize(arr, (self.stream_w, self.stream_h))
-                            ret, buf = cv2.imencode(".jpg", small, [cv2.IMWRITE_JPEG_QUALITY, 72])
-                            if ret:
-                                return buf.tobytes()
-                    except Exception:
-                        pass
-
-                    # 3. Fallback: capture_file JPEG
+                    # 3. Fallback: capture_file JPEG main
                     self.stream_buf.seek(0)
                     self.stream_buf.truncate(0)
                     try:
@@ -547,7 +561,7 @@ class LiveStreamUploaderPipelined:
                 continue
 
             try:
-                res = http_session.post(url, data=frame, headers=headers, timeout=2.5)
+                res = http_session.post(url, data=frame, headers=headers, timeout=6.0)
                 if res.status_code == 200:
                     self.sent_count += 1
                     now = time.time()
@@ -676,7 +690,7 @@ def run_client(args):
 
                 threading.Thread(
                     target=send_live_speed,
-                    args=(args.backend, args.device_id, speed, True),
+                    args=(active_backend, args.device_id, speed, True),
                     daemon=True
                 ).start()
 
@@ -688,7 +702,7 @@ def run_client(args):
                     if breach_frame:
                         threading.Thread(
                             target=post_speed_breach_dual,
-                            args=(args.backend, cloud_dispatcher, args.device_id,
+                            args=(active_backend, cloud_dispatcher, args.device_id,
                                   args.road_name, speed, args.limit, breach_frame),
                             daemon=True
                         ).start()
@@ -697,7 +711,7 @@ def run_client(args):
                     last_idle_heartbeat = now_time
                     threading.Thread(
                         target=send_live_speed,
-                        args=(args.backend, args.device_id, 0.0, False),
+                        args=(active_backend, args.device_id, 0.0, False),
                         daemon=True
                     ).start()
 
@@ -724,8 +738,8 @@ if __name__ == "__main__":
     parser.add_argument("--limit", type=float, default=DEFAULT_SPEED_LIMIT)
     parser.add_argument("--threshold", type=float, default=DEFAULT_TRIGGER_LIMIT)
     parser.add_argument("--summary-interval", type=int, default=DEFAULT_SUMMARY_SEC, help="Seconds between road segment speed analytics summaries")
-    parser.add_argument("--width", type=int, default=1024)
-    parser.add_argument("--height", type=int, default=576)
+    parser.add_argument("--width", type=int, default=640)
+    parser.add_argument("--height", type=int, default=360)
     parser.add_argument("--radar-port", default=None)
 
     args = parser.parse_args()
