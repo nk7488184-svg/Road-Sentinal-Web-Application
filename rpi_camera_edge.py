@@ -40,6 +40,12 @@ except ImportError:
 
 # Persistent HTTP keep-alive session with connection pooling
 http_session = requests.Session()
+http_session.verify = False
+try:
+    import urllib3
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+except Exception:
+    pass
 adapter = HTTPAdapter(pool_connections=15, pool_maxsize=25, max_retries=0)
 http_session.mount("https://", adapter)
 http_session.mount("http://", adapter)
@@ -47,8 +53,8 @@ http_session.mount("http://", adapter)
 # ---------------------------------------------------------------------------
 # Default Configuration
 # ---------------------------------------------------------------------------
-DEFAULT_LAN_URL = os.environ.get("LAN_URL", "http://172.16.67.244:8000")
-DEFAULT_TUNNEL_URL = os.environ.get("BACKEND_URL", "https://sorts-physiology-dropped-randy.trycloudflare.com")
+DEFAULT_LAN_URL = os.environ.get("LAN_URL", "http://10.192.226.254:8000")
+DEFAULT_TUNNEL_URL = os.environ.get("BACKEND_URL", "https://exp-produces-essays-positive.trycloudflare.com")
 DEFAULT_DRIVE_WEBHOOK = os.environ.get("DRIVE_WEBHOOK", "https://script.google.com/macros/s/AKfycbz9pMyATj3yq2YCz0oovQe1l5CUYV6KM_BVmWCb8ZzCPq2A9HRHAdK6lthgpO7Nywnw/exec")
 DEFAULT_DEVICE_ID = os.environ.get("DEVICE_ID", "RPI4_CAMERA_UNIT_01")
 DEFAULT_ROAD_NAME = os.environ.get("ROAD_NAME", "Behind A11 on New Construction Road")
