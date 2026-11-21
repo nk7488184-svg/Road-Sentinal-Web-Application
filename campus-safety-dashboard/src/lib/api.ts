@@ -3,15 +3,17 @@ const LOCAL_FALLBACK_URL = 'http://localhost:3002/api';
 
 function getApiCandidates(): string[] {
   const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  const candidates: string[] = [];
 
-  // Express backend (port 3002) is the single source of truth for reports.
-  // The dashboard's own /api route (port 3000) is only a fallback cache.
-  const candidates: string[] = [EXPRESS_BACKEND_URL, LOCAL_FALLBACK_URL];
   if (envUrl) {
     const clean = envUrl.trim().replace(/\/+$/, '');
     const formatted = clean.endsWith('/api') ? clean : `${clean}/api`;
     candidates.push(formatted);
   }
+
+  // Express backend (port 3002) as local fallback
+  candidates.push(EXPRESS_BACKEND_URL, LOCAL_FALLBACK_URL);
+
   // Dashboard's own API as last-resort fallback
   const isBrowser = typeof window !== 'undefined';
   if (isBrowser) {
